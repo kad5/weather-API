@@ -1,19 +1,11 @@
+import { createSearchListEntry } from "./dom.js";
+
 const weatherApiKey = "f14c6672ce5c4e0da53185847250701";
 const picsApiKey = "48094774-3f4f170104c401d823480c7e4";
 const daysArry = getDays();
 
-// gets a background image to represent the city searched for
-async function fetchImage(string) {
-  const imgObj = await fetch(
-    `https://pixabay.com/api/?key=${picsApiKey}&q=${string}&image_type=photo&category=places`
-  );
-  const imgData = await imgObj.json();
-  const randomImg = Math.floor(Math.random() * (imgData.hits.length - 1));
-  document.querySelector("img").src = imgData.hits[randomImg].webformatURL;
-}
-
 // takes a string from the input and returns an array of similar city names
-async function searchLocationsByName(cityString) {
+export async function searchLocationsByName(cityString) {
   let citiesArray = [];
   try {
     const fetchObj = await fetch(
@@ -26,22 +18,25 @@ async function searchLocationsByName(cityString) {
 
   if (citiesArray && citiesArray.length > 0) {
     citiesArray.forEach((city) => {
-      extractCityData(city);
+      createSearchListEntry(city);
     });
   } else null;
 }
 
-// constructs the cities list on input seach and passes latitude and longitude to the api on click
-function extractCityData(city) {
-  const fullName = `${city.name}, ${city.country}`;
-
-  const webName = [
-    city.name.replace(/\s+/g, "+"),
-    city.country.replace(/\s+/g, "+"),
-  ].join("+");
-  /* event listener for each one
-  getLocationWeather(city.lat, city.lon);
-  fetchImage(webName);*/
+// gets a background image to represent the city searched for
+export async function fetchImage(string) {
+  try {
+    const imgObj = await fetch(
+      `https://pixabay.com/api/?key=${picsApiKey}&q=${string}&image_type=photo&category=places`
+    );
+    const imgData = await imgObj.json();
+    const randomImg = Math.floor(Math.random() * (imgData.hits.length - 1));
+    document.getElementById("bg-img").src =
+      imgData.hits[randomImg].webformatURL;
+  } catch (error) {
+    document.getElementById("bg-img").src = "";
+    return null;
+  }
 }
 
 //gets yesterday, and day before yesterday dates in iso format to be passed into the api
@@ -63,7 +58,7 @@ async function fetchWeatherData(url) {
 }
 
 // calls the api to fetch data for 5 days, gets the date from getDays and runs it to fetchWeatherData
-async function getLocationWeather(lat, lon) {
+export async function getLocationWeather(lat, lon) {
   try {
     const [
       {
