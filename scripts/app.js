@@ -31,8 +31,11 @@ export async function fetchImage(string) {
     );
     const imgData = await imgObj.json();
     const randomImg = Math.floor(Math.random() * (imgData.hits.length - 1));
-    document.getElementById("bg-img").src =
-      imgData.hits[randomImg].webformatURL;
+    const root = document.documentElement;
+    root.style.setProperty(
+      "--bg-img",
+      `url(${imgData.hits[randomImg].webformatURL})`
+    );
   } catch (error) {
     document.getElementById("bg-img").src = "";
     return null;

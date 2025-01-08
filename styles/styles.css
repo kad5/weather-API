@@ -1,0 +1,84 @@
+@import url("https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@100..900&display=swap");
+
+:root {
+  --text: hsl(0, 0%, 25%);
+  --grey-100: hsl(0, 0%, 98%);
+  --grey-200: hsl(0, 0%, 93%);
+  --grey-300: hsl(0, 0%, 87%);
+  --grey-400: hsl(0, 0%, 74%);
+  --grey-600: hsl(0, 0%, 46%);
+  --grey-800: hsl(0, 0%, 26%);
+  --grey-900: hsl(0, 0%, 14%);
+  --bg-img: ;
+}
+
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  user-select: none;
+  font-family: Figtree;
+  color: var(--text);
+}
+
+body {
+  background-color: hsl(0, 0%, 98%);
+}
+
+.wrapper {
+  height: 100vh;
+  height: 100dvh;
+  padding-block: 1rem;
+  margin-inline: auto;
+  width: min(1024px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+h1 {
+  font-size: 3rem;
+  font-weight: 300;
+}
+
+.search-bar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  align-items: center;
+  > button {
+    width: 40px;
+    height: 40px;
+    border-radius: 2rem;
+    border: none;
+    background-color: #242424;
+    display: grid;
+    place-content: center;
+  }
+}
+
+#searchBar {
+  width: max(250px, 65%);
+  font-size: 1rem;
+  padding: 0.75rem 2rem;
+  border-radius: 2rem;
+  border: none;
+  outline: none;
+  background-color: var(--grey-200);
+}
+
+.container {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  gap: 2rem;
+  overflow: auto;
+  background-image: var(--bg-img);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0% 30%;
+
+  border-radius: 2rem;
+}
