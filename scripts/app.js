@@ -1,4 +1,4 @@
-import { createSearchListEntry } from "./dom.js";
+import { createSearchListEntry, generateCards } from "./dom.js";
 
 const weatherApiKey = "f14c6672ce5c4e0da53185847250701";
 const picsApiKey = "48094774-3f4f170104c401d823480c7e4";
@@ -17,9 +17,7 @@ export async function searchLocationsByName(cityString) {
   }
 
   if (citiesArray && citiesArray.length > 0) {
-    citiesArray.forEach((city) => {
-      createSearchListEntry(city);
-    });
+    createSearchListEntry(citiesArray);
   } else null;
 }
 
@@ -37,7 +35,6 @@ export async function fetchImage(string) {
       `url(${imgData.hits[randomImg].webformatURL})`
     );
   } catch (error) {
-    document.getElementById("bg-img").src = "";
     return null;
   }
 }
@@ -51,50 +48,25 @@ function getDays() {
   ];
 }
 
-// helper that takes a fetch url and fetches the weather object from the api
-async function fetchWeatherData(url) {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch: ${response.statusText}`);
-  }
-  return response.json();
-}
-
 // calls the api to fetch data for 5 days, gets the date from getDays and runs it to fetchWeatherData
-export async function getLocationWeather(lat, lon) {
+export async function getLocationWeather(city, fullName) {
+  const lat = city.lat;
+  const lon = city.lon;
   try {
-    const [
-      {
-        forecast: {
-          forecastday: [dayN2W],
-        },
-      },
-      {
-        forecast: {
-          forecastday: [dayN1W],
-        },
-      },
-      {
-        forecast: {
-          forecastday: [todayW, dayP1W, dayP2W],
-        },
-      },
-    ] = await Promise.all([
-      fetchWeatherData(
-        `https://api.weatherapi.com/v1/history.json?key=${weatherApiKey}&q=${lat},${lon}&dt=${daysArry[1]}`
-      ),
-      fetchWeatherData(
-        `https://api.weatherapi.com/v1/history.json?key=${weatherApiKey}&q=${lat},${lon}&dt=${daysArry[0]}`
-      ),
-      fetchWeatherData(
-        `https://api.weatherapi.com/v1/forecast.json?key=${weatherApiKey}&q=${lat},${lon}&days=3&aqi=no&alerts=no`
-      ),
-    ]);
-    return [dayN2W, dayN1W, todayW, dayP1W, dayP2W];
+    const forecastObj = await fetch(
+      `https://api.weatherapi.com/v1/forecast.json?key=${weatherApiKey}&q=${lat},${lon}&days=3&aqi=no&alerts=no`
+    );
+    const forecastJSON = await forecastObj.json();
+
+    const [day1, day2, day3] = forecastJSON.forecast.forecastday;
+
+    const cardsArr = [day1, day2, day3];
+    console.log(cardsArr);
+    generateCards(cardsArr, fullName);
   } catch (error) {
     console.error("Error fetching or processing weather data:", error);
     return null;
   }
 }
 
-searchLocationsByName("alex");
+//searchLocationsByName("alex");
